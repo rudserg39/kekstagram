@@ -1,0 +1,29 @@
+'use strict';
+
+/* eslint-enable */
+
+(function () {
+
+  var photoElementsArray = [];
+
+
+  var onSuccess = function (data) {
+    window.data.photoElementsArray = data;
+    window.rendering.renderPhotos(data);
+    console.log(data);
+  };
+
+  console.log(photoElementsArray);
+  var onError = function () {
+
+  };
+
+
+  window.backend.fetchData(onSuccess, onError);
+
+
+  window.data = {
+    photoElementsArray: photoElementsArray
+  };
+
+})();
