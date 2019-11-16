@@ -9,7 +9,7 @@
 
   var onSuccess = function (data) {
     window.data.photoElementsArray = data;
-    window.rendering.renderPhotos(data);
+    window.thumbnails.renderPhotos(data);
     console.log(data);
   };
 
