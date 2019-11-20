@@ -23,15 +23,16 @@
       window.bigPhoto.thumbnailClickHandler(photo);
     });
 
+
     return pictureElement;
   };
 
 
   // Функция отрисовки фото
-  var renderPhotos = function (photoData) {
+  var renderPhotos = function (photosArray) {
     var fragment = document.createDocumentFragment();
 
-    photoData.forEach(function (photoElement) {
+    photosArray.forEach(function (photoElement) {
       fragment.appendChild(createPhotoElement(photoElement));
       photoContainer.appendChild(fragment);
     });
