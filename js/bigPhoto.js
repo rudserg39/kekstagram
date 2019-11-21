@@ -23,8 +23,6 @@
   };
 
 
-  // Обработчики
-
   // Показ большого фото
   var thumbnailClickHandler = function (photo) {
     bigPhotoImg.src = photo.url;
@@ -35,25 +33,14 @@
     addComments(photo);
   };
 
-  // Закрытие фото
-  var closeButtonClickHandler = function () {
-    bigPhotoContainer.classList.add('hidden');
-  };
 
-  var escButtonKeydownHandler = function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      bigPhotoContainer.classList.add('hidden');
-    }
-  };
-
-  closeButton.addEventListener('click', closeButtonClickHandler);
-  document.addEventListener('keydown', escButtonKeydownHandler);
+  // Закрытие большого фото
+  window.utils.closeWindow(closeButton, 'click', bigPhotoContainer);
+  window.utils.closeWindow(document, 'keydown', bigPhotoContainer);
 
 
   window.bigPhoto = {
-    thumbnailClickHandler: thumbnailClickHandler,
-    closeButtonClickHandler: closeButtonClickHandler,
-    escButtonKeydownHandler: escButtonKeydownHandler
+    thumbnailClickHandler: thumbnailClickHandler
   };
 
 })();
