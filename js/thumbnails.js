@@ -13,18 +13,17 @@
 
   // Функция создания элемента фото
   var createPhotoElement = function (photo) {
-    var pictureElement = photoTemplate.cloneNode(true);
+    var photoElement = photoTemplate.cloneNode(true);
 
-    pictureElement.querySelector('img').src = photo.url;
-    pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    pictureElement.querySelector('.picture__likes').textContent = photo.likes;
+    photoElement.querySelector('img').src = photo.url;
+    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+    photoElement.querySelector('.picture__likes').textContent = photo.likes;
 
-    pictureElement.addEventListener('click', function () {
+    photoElement.addEventListener('click', function () {
       window.bigPhoto.thumbnailClickHandler(photo);
     });
 
-
-    return pictureElement;
+    return photoElement;
   };
 
 

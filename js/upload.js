@@ -11,5 +11,4 @@
   window.utils.closeWindow(closeImgEditFormButton, 'click', imgEditForm);
   window.utils.closeWindow(document, 'keydown', imgEditForm);
 
-  imgEditForm.classList.remove('hidden');
 })();
