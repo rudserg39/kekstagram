@@ -12,10 +12,11 @@
 
   var photoCommentsList = photoContainer.querySelector('.social__comments');
   var photoComment = photoCommentsList.querySelector('li');
-  var photoComments = photoCommentsList.querySelectorAll('li');
 
   var showCommentsButton = photoContainer.querySelector('.social__comments-loader');
   var closeButton = photoContainer.querySelector('.big-picture__cancel');
+
+  photoCommentsList.innerHTML = '';
 
 
   // Создание элемента комментария
@@ -28,18 +29,24 @@
     return commentElement;
   };
 
+  var counter = 5;
 
   // Обработчик нажатия кнопки показа дополнительных комментариев
-  var showCommentsButtonCLickHandler = function (photo, add) {
+  var showCommentsButtonClickHandler = function (photo, add) {
     var fragment = document.createDocumentFragment();
     var commentsArray = Array.from(photoCommentsList.children);
 
-    photo.comments.slice(2).forEach(function (comment) {
+
+    if (counter > photo.comments.length) {
+      showCommentsButton.classList.add('hidden');
+    }
+
+    photo.comments.slice(0, counter).forEach(function (comment) {
       if (add) {
         fragment.appendChild(createCommentElement(comment));
         photoCommentsList.appendChild(fragment);
       } else {
-        commentsArray.slice(2).forEach(function (commentElement) {
+        commentsArray.slice(0, counter).forEach(function (commentElement) {
           commentElement.remove();
         });
         showCommentsButton.classList.remove('hidden');
@@ -50,20 +57,19 @@
 
   // Функция добавления комментариев к большому фото
   var addComments = function (photo) {
-    // Добавление свойств для первых двух комментариев из разметки
-    for (var i = 0; i < photoComments.length; i++) {
-      photoComments[i].querySelector('img').src = photo.comments[i].avatar;
-      photoComments[i].querySelector('p').textContent = photo.comments[i].message;
-    }
-
     // Добавление и удаление дополнительных комментариев при клике на кнопку
-    showCommentsButtonCLickHandler(photo, false);
+    showCommentsButtonClickHandler(photo, false);
 
     showCommentsButton.addEventListener('click', function () {
-      showCommentsButtonCLickHandler(photo, false);
-      showCommentsButtonCLickHandler(photo, true);
-      showCommentsButton.classList.add('hidden');
+
+      counter += 5;
+
+      showCommentsButtonClickHandler(photo, false);
+      showCommentsButtonClickHandler(photo, true);
+
+      console.log(counter);
     });
+
   };
 
 
@@ -75,6 +81,8 @@
     photoCommentsNumber.textContent = photo.comments.length;
     photoContainer.classList.remove('hidden');
     addComments(photo);
+    counter = 5;
+    showCommentsButtonClickHandler(photo, true);
   };
 
 
