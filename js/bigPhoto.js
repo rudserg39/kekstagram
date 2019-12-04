@@ -8,7 +8,7 @@
   var photoImg = photoContainer.querySelector('.big-picture__img').querySelector('img');
   var photoDescription = photoContainer.querySelector('.social__caption');
   var photoLikes = photoContainer.querySelector('.likes-count');
-  var photoCommentsNumber = photoContainer.querySelector('.comments-count');
+  var openedCommentsNumber = photoContainer.querySelector('.social__comment-count');
 
   var photoCommentsList = photoContainer.querySelector('.social__comments');
   var photoComment = photoCommentsList.querySelector('li');
@@ -16,7 +16,8 @@
   var showCommentsButton = photoContainer.querySelector('.social__comments-loader');
   var closeButton = photoContainer.querySelector('.big-picture__cancel');
 
-  photoCommentsList.innerHTML = '';
+  var commentsArray = [];
+  var counter = 5;
 
 
   // Создание элемента комментария
@@ -29,48 +30,36 @@
     return commentElement;
   };
 
-  var counter = 5;
 
-  // Обработчик нажатия кнопки показа дополнительных комментариев
-  var showCommentsButtonClickHandler = function (photo, add) {
-    var fragment = document.createDocumentFragment();
-    var commentsArray = Array.from(photoCommentsList.children);
-
-
-    if (counter > photo.comments.length) {
-      showCommentsButton.classList.add('hidden');
-    }
-
-    photo.comments.slice(0, counter).forEach(function (comment) {
-      if (add) {
-        fragment.appendChild(createCommentElement(comment));
-        photoCommentsList.appendChild(fragment);
-      } else {
-        commentsArray.slice(0, counter).forEach(function (commentElement) {
-          commentElement.remove();
-        });
-        showCommentsButton.classList.remove('hidden');
-      }
-    });
-  };
-
-
-  // Функция добавления комментариев к большому фото
+  // Добавление комментариев в массив
   var addComments = function (photo) {
-    // Добавление и удаление дополнительных комментариев при клике на кнопку
-    showCommentsButtonClickHandler(photo, false);
-
-    showCommentsButton.addEventListener('click', function () {
-
-      counter += 5;
-
-      showCommentsButtonClickHandler(photo, false);
-      showCommentsButtonClickHandler(photo, true);
-
-      console.log(counter);
+    photo.comments.forEach(function (comment) {
+      commentsArray.push(createCommentElement(comment));
     });
-
   };
+
+
+  // Добавление комментариев в разметку по 5 штук
+  var showCommentsButtonClickHandler = function () {
+    var fragment = document.createDocumentFragment();
+
+    commentsArray.slice(0, window.bigPhoto.counter).forEach(function (comment) {
+      fragment.appendChild(comment);
+      photoCommentsList.appendChild(fragment);
+
+      if (photoCommentsList.querySelectorAll('li').length === commentsArray.length) {
+        showCommentsButton.classList.add('hidden');
+      }
+
+      openedCommentsNumber.textContent = commentsArray.length === 1 ? '1 комментарий' : photoCommentsList.querySelectorAll('li').length + ' из ' + commentsArray.length + ' комментариев';
+    });
+  };
+
+
+  showCommentsButton.addEventListener('click', function () {
+    window.bigPhoto.counter += 5;
+    showCommentsButtonClickHandler();
+  });
 
 
   // Показ большого фото
@@ -78,20 +67,22 @@
     photoImg.src = photo.url;
     photoDescription.textContent = photo.description;
     photoLikes.textContent = photo.likes;
-    photoCommentsNumber.textContent = photo.comments.length;
     photoContainer.classList.remove('hidden');
+    showCommentsButton.classList.remove('hidden');
+    commentsArray = [];
+    photoCommentsList.innerHTML = '';
     addComments(photo);
-    counter = 5;
-    showCommentsButtonClickHandler(photo, true);
+    showCommentsButtonClickHandler();
   };
 
 
   // Закрытие фото
-  window.utils.closeWindow(closeButton, 'click', photoContainer);
-  window.utils.closeWindow(document, 'keydown', photoContainer);
+  window.utils.closeWindow(closeButton, 'click', photoContainer, true);
+  window.utils.closeWindow(document, 'keydown', photoContainer, true);
 
 
   window.bigPhoto = {
+    counter: counter,
     thumbnailClickHandler: thumbnailClickHandler
   };
 

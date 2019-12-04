@@ -17,7 +17,7 @@
 
 
   // Функция закрытия окна
-  var closeWindow = function (eventElement, eventType, openedElement) {
+  var closeWindow = function (eventElement, eventType, openedElement, counter) {
     eventElement.addEventListener(eventType, function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         openedElement.classList.add('hidden');
@@ -25,6 +25,10 @@
 
       if (eventType === 'click') {
         openedElement.classList.add('hidden');
+      }
+
+      if (counter) {
+        window.bigPhoto.counter = 5;
       }
     });
   };
