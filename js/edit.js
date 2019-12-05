@@ -37,6 +37,7 @@
   var pinContainer = document.querySelector('.img-upload__effect-level');
   var pin = pinContainer.querySelector('.effect-level__pin');
   var effectDepthLine = pinContainer.querySelector('.effect-level__depth');
+  var effectsList = document.querySelector('.effects__list');
 
 
   // Изменения размера фото
@@ -53,6 +54,33 @@
   };
 
   scaleEditorContainer.addEventListener('click', scaleButtonClickHandler);
+
+
+  // Функция установки типа и глубины фильтра
+  var setFilter = function (filterType, value) {
+    var depth;
+
+    if (filterType === filter.CHROME || filter.SEPIA) {
+      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT) + ')';
+    }
+    if (filterType === filter.MARVIN) {
+      depth = filterType + '(' + Math.floor(parseInt(value, 10) / pinLineBoorders.RIGHT * 100) + '%)';
+    }
+
+    if (filterType === filter.PHOBOS) {
+      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + 'px)';
+    }
+
+    if (filterType === filter.HEAT) {
+      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + ')';
+    }
+
+    if (filterType === filter.ORIGINAL) {
+      image.removeAttribute('style');
+    }
+
+    return depth;
+  };
 
 
   // Изменение фильтров
@@ -99,7 +127,33 @@
     document.addEventListener('mouseup', mouseUpHandler);
   });
 
-  // image.style.filter = filter.SEPIA + '(100%)';
-
-
 })();
+
+
+// effectsList.addEventListener('click', function (evt) {
+
+//   if (evt.target === effectsList.querySelector('#effect-none')) {
+//     filterType = filter.ORIGINAL;
+//   }
+
+//   if (evt.target === effectsList.querySelector('#effect-chrome')) {
+//     filterType = filter.CHROME;
+//   }
+
+//   if (evt.target === effectsList.querySelector('#effect-sepia')) {
+//     filterType = filter.SEPIA;
+//   }
+
+//   if (evt.target === effectsList.querySelector('#effect-marvin')) {
+//     filterType = filter.SEPIA;
+//   }
+
+//   if (evt.target === effectsList.querySelector('#effect-phobos')) {
+//     filterType = filter.PHOBOS;
+//   }
+
+//   if (evt.target === effectsList.querySelector('#effect-heat')) {
+//     filterType = filter.HEAT;
+//   }
+
+// });
