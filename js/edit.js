@@ -16,7 +16,8 @@
     SEPIA: 'sepia',
     MARVIN: 'invert',
     PHOBOS: 'blur',
-    HEAT: 'brightness'
+    HEAT: 'brightness',
+    ORIGINAL: 'none'
   };
 
   var pinLineBoorders = {
@@ -38,9 +39,10 @@
   var pin = pinContainer.querySelector('.effect-level__pin');
   var effectDepthLine = pinContainer.querySelector('.effect-level__depth');
   var effectsList = document.querySelector('.effects__list');
+  var filterType;
 
 
-  // Изменения размера фото
+  // Изменение размера фото
   var scaleButtonClickHandler = function (evt) {
     if (evt.target === scaleButtonSmall) {
       scaleValue.value = parseInt(scaleValue.value, 10) > parseInt(imgScale.MIN, 10) ? (parseInt(scaleValue.value, 10) - STEP) + '%' : imgScale.MIN;
@@ -57,30 +59,52 @@
 
 
   // Функция установки типа и глубины фильтра
-  var setFilter = function (filterType, value) {
+  var setFilter = function (selectedfilter, value) {
     var depth;
 
-    if (filterType === filter.CHROME || filter.SEPIA) {
-      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT) + ')';
-    }
-    if (filterType === filter.MARVIN) {
-      depth = filterType + '(' + Math.floor(parseInt(value, 10) / pinLineBoorders.RIGHT * 100) + '%)';
+    if (selectedfilter === filter.CHROME || filter.SEPIA) {
+      depth = selectedfilter + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT) + ')';
     }
 
-    if (filterType === filter.PHOBOS) {
-      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + 'px)';
+    if (selectedfilter === filter.MARVIN) {
+      depth = selectedfilter + '(' + Math.floor(parseInt(value, 10) / pinLineBoorders.RIGHT * 100) + '%)';
     }
 
-    if (filterType === filter.HEAT) {
-      depth = filterType + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + ')';
+    if (selectedfilter === filter.PHOBOS) {
+      depth = selectedfilter + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + 'px)';
     }
 
-    if (filterType === filter.ORIGINAL) {
+    if (selectedfilter === filter.HEAT) {
+      depth = selectedfilter + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + ')';
+    }
+
+    if (selectedfilter === filter.ORIGINAL) {
       image.removeAttribute('style');
     }
 
     return depth;
   };
+
+
+  // Функция получения выбранного элемента фильтра
+  var getCheckedElement = function () {
+    var checkedElement = effectsList.querySelector('input:checked');
+    return checkedElement;
+  };
+
+
+  // Функция получение типа фильтра
+  var effectsListChangeHandler = function () {
+    var checkedElement = getCheckedElement();
+
+    Object.keys(filter).forEach(function (filterItem) {
+      if (filterItem === checkedElement.value.toUpperCase()) {
+        window.edit.filterType = filter[filterItem];
+      }
+    });
+  };
+
+  effectsList.addEventListener('change', effectsListChangeHandler);
 
 
   // Изменение фильтров
@@ -114,6 +138,8 @@
       if (pin.offsetLeft > pinLineBoorders.RIGHT) {
         pin.style.left = pinLineBoorders.RIGHT + 'px';
       }
+
+      image.style.filter = setFilter(window.edit.filterType, pin.style.left);
     };
 
     var mouseUpHandler = function (upEvt) {
@@ -127,33 +153,9 @@
     document.addEventListener('mouseup', mouseUpHandler);
   });
 
+
+  window.edit = {
+    filterType: filterType
+  };
+
 })();
-
-
-// effectsList.addEventListener('click', function (evt) {
-
-//   if (evt.target === effectsList.querySelector('#effect-none')) {
-//     filterType = filter.ORIGINAL;
-//   }
-
-//   if (evt.target === effectsList.querySelector('#effect-chrome')) {
-//     filterType = filter.CHROME;
-//   }
-
-//   if (evt.target === effectsList.querySelector('#effect-sepia')) {
-//     filterType = filter.SEPIA;
-//   }
-
-//   if (evt.target === effectsList.querySelector('#effect-marvin')) {
-//     filterType = filter.SEPIA;
-//   }
-
-//   if (evt.target === effectsList.querySelector('#effect-phobos')) {
-//     filterType = filter.PHOBOS;
-//   }
-
-//   if (evt.target === effectsList.querySelector('#effect-heat')) {
-//     filterType = filter.HEAT;
-//   }
-
-// });
