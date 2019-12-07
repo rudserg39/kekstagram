@@ -85,7 +85,7 @@
     }
 
     if (selectedfilter === filter.NONE) {
-      image.style.removeProperty('filter');
+      image.style.filter = filter.NONE;
       effectDepthLineContainer.classList.add('hidden');
     }
 
@@ -113,6 +113,7 @@
     pin.style.left = pinLineBoorders.RIGHT + 'px';
     effectDepthLine.style.width = pin.style.left;
     image.style.filter = setFilter(window.edit.filterType, pin.style.left);
+    image.className = 'effects__preview--' + checkedElement.value;
   };
 
   effectsList.addEventListener('change', effectsListChangeHandler);
