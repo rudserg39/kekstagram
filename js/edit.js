@@ -17,7 +17,7 @@
     MARVIN: 'invert',
     PHOBOS: 'blur',
     HEAT: 'brightness',
-    ORIGINAL: 'none'
+    NONE: 'none'
   };
 
   var pinLineBoorders = {
@@ -37,9 +37,13 @@
   // Элементы пина и фильтров
   var pinContainer = document.querySelector('.img-upload__effect-level');
   var pin = pinContainer.querySelector('.effect-level__pin');
-  var effectDepthLine = pinContainer.querySelector('.effect-level__depth');
+  var effectDepthLineContainer = document.querySelector('.img-upload__effect-level');
+  var effectDepthLine = effectDepthLineContainer.querySelector('.effect-level__depth');
   var effectsList = document.querySelector('.effects__list');
   var filterType;
+
+
+  effectDepthLineContainer.classList.add('hidden');
 
 
   // Изменение размера фото
@@ -52,7 +56,7 @@
       scaleValue.value = parseInt(scaleValue.value, 10) < parseInt(imgScale.MAX, 10) ? (parseInt(scaleValue.value, 10) + STEP) + '%' : imgScale.MAX;
     }
 
-    image.setAttribute('style', 'transform: scale(' + parseInt(scaleValue.value, 10) / 100 + ')');
+    image.style.transform = ('scale(' + parseInt(scaleValue.value, 10) / 100 + ')');
   };
 
   scaleEditorContainer.addEventListener('click', scaleButtonClickHandler);
@@ -61,6 +65,8 @@
   // Функция установки типа и глубины фильтра
   var setFilter = function (selectedfilter, value) {
     var depth;
+
+    effectDepthLineContainer.classList.remove('hidden');
 
     if (selectedfilter === filter.CHROME || filter.SEPIA) {
       depth = selectedfilter + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT) + ')';
@@ -78,8 +84,9 @@
       depth = selectedfilter + '(' + (parseInt(value, 10) / pinLineBoorders.RIGHT * 3) + ')';
     }
 
-    if (selectedfilter === filter.ORIGINAL) {
-      image.removeAttribute('style');
+    if (selectedfilter === filter.NONE) {
+      image.style.removeProperty('filter');
+      effectDepthLineContainer.classList.add('hidden');
     }
 
     return depth;
@@ -102,6 +109,10 @@
         window.edit.filterType = filter[filterItem];
       }
     });
+
+    pin.style.left = pinLineBoorders.RIGHT + 'px';
+    effectDepthLine.style.width = pin.style.left;
+    image.style.filter = setFilter(window.edit.filterType, pin.style.left);
   };
 
   effectsList.addEventListener('change', effectsListChangeHandler);
@@ -130,6 +141,7 @@
       pin.style.left = pin.offsetLeft + shift.x + 'px';
 
       effectDepthLine.style.width = pin.style.left;
+
 
       if (pin.offsetLeft < pinLineBoorders.LEFT) {
         pin.style.left = pinLineBoorders.LEFT + 'px';
