@@ -43,9 +43,6 @@
   var filterType;
 
 
-  effectDepthLineContainer.classList.add('hidden');
-
-
   // Изменение размера фото
   var scaleButtonClickHandler = function (evt) {
     if (evt.target === scaleButtonSmall) {
@@ -60,6 +57,17 @@
   };
 
   scaleEditorContainer.addEventListener('click', scaleButtonClickHandler);
+
+
+  // Функция установки линии глубины фильтра в начальное состояние
+  var setEffectDepthLineInitialState = function (reupload) {
+    pin.style.left = pinLineBoorders.RIGHT + 'px';
+    effectDepthLine.style.width = pin.style.left;
+
+    if (reupload) {
+      effectDepthLineContainer.classList.add('hidden');
+    }
+  };
 
 
   // Функция установки типа и глубины фильтра
@@ -110,8 +118,7 @@
       }
     });
 
-    pin.style.left = pinLineBoorders.RIGHT + 'px';
-    effectDepthLine.style.width = pin.style.left;
+    setEffectDepthLineInitialState(false);
     image.style.filter = setFilter(window.edit.filterType, pin.style.left);
     image.className = 'effects__preview--' + checkedElement.value;
   };
@@ -168,6 +175,8 @@
 
 
   window.edit = {
+    image: image,
+    setEffectDepthLineInitialState: setEffectDepthLineInitialState,
     filterType: filterType
   };
 

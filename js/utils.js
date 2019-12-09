@@ -17,7 +17,7 @@
 
 
   // Функция закрытия окна
-  var closeWindow = function (eventElement, eventType, openedElement, counter) {
+  var closeWindow = function (eventElement, eventType, openedElement, counter, prewiev) {
     eventElement.addEventListener(eventType, function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         openedElement.classList.add('hidden');
@@ -29,6 +29,12 @@
 
       if (counter) {
         window.bigPhoto.counter = 5;
+      }
+
+      if (prewiev) {
+        window.edit.image.style.filter = 'none';
+        window.edit.image.style.transform = 'scale(1)';
+        window.edit.setEffectDepthLineInitialState(true);
       }
     });
   };
@@ -45,3 +51,5 @@
 
 
 // 1) Добавить перезакрузку формы при закрытии окна нажатием ESC
+// 2) Удаление загруженной картинки при отправке данных
+// 3) Фото не загружается повторно при закрытии окна через esc
