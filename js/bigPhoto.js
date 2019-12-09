@@ -77,8 +77,8 @@
 
 
   // Закрытие фото
-  window.utils.closeWindow(closeButton, 'click', photoContainer, true);
-  window.utils.closeWindow(document, 'keydown', photoContainer, true);
+  window.utils.closeWindow(closeButton, 'click', photoContainer, true, false);
+  window.utils.closeWindow(document, 'keydown', photoContainer, true, false);
 
 
   window.bigPhoto = {
