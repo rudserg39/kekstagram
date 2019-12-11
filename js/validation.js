@@ -11,13 +11,18 @@
 
   var checkFormValidity = function () {
 
-    var tagsArray = [];
+    // Деление строки на отдельные строки по пробелам
     var tags = tagsInput.value.split(' ');
-    tagsArray.push(tags);
 
-    tagsArray.forEach(function (tag) {
+    // Исключение пустых строк
+    var contentTags = tags.filter(function (tag) {
+      return tag !== '';
+    });
 
-      if (tag.toString().slice(0, 1) !== '#') {
+
+    contentTags.forEach(function (tag) {
+
+      if (tag.toString().substr(0, 1) !== '#') {
         tagsInput.style.border = '2px solid red';
         tagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
       } else {
@@ -25,15 +30,27 @@
         tagsInput.style.border = '2px solid green';
       }
 
-      if (tag.toString().length < 2) {
+
+      if (tag.toString().substr() === '#') {
         tagsInput.style.border = '2px solid red';
         tagsInput.setCustomValidity('Хэш-тег не может состоять только из одной решётки');
       }
 
-      if (tags.length > 5) {
+
+      var repeats = contentTags.filter(function (checkedTag) {
+        return tag === checkedTag;
+      });
+
+      if (repeats.length > 1) {
+        tagsInput.style.border = '2px solid red';
+        tagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+      }
+
+      if (contentTags.length > 5) {
         tagsInput.style.border = '2px solid red';
         tagsInput.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
       }
+
 
       if (tagsInput.value === '') {
         tagsInput.style.border = 'none';
@@ -50,3 +67,5 @@
 
 
 })();
+
+// После очистки tagsInput.value при ошибке, всё равно выводится сообение о той же ошибке
