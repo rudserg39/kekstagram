@@ -9,19 +9,20 @@
   tagsInput.style.outline = 'none';
 
 
-  var checkFormValidity = function () {
-
-    // Деление строки на отдельные строки по пробелам
-    var tags = tagsInput.value.split(' ');
-
-    // Исключение пустых строк
-    var contentTags = tags.filter(function (tag) {
+  var getTags = function () {
+    // Деление строки на отдельные строки по пробелам и исключение пустых строк
+    var tags = tagsInput.value.split(' ').filter(function (tag) {
       return tag !== '';
     });
 
+    return tags;
+  };
 
-    contentTags.forEach(function (tag) {
 
+  var checkFormValidity = function (tags) {
+
+    tags.forEach(function (tag) {
+      // startsWith()
       if (tag.toString().substr(0, 1) !== '#') {
         tagsInput.style.border = '2px solid red';
         tagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
@@ -37,8 +38,14 @@
       }
 
 
-      var repeats = contentTags.filter(function (checkedTag) {
-        return tag === checkedTag;
+      if (tagsInput.value.substr(0, 1) === '#' && tag.match(/#/g).length > 1) {
+        tagsInput.style.border = '2px solid red';
+        tagsInput.setCustomValidity('Хэш-теги разделяются пробелами');
+      }
+
+
+      var repeats = tags.filter(function (checkedTag) {
+        return tag.toLowerCase() === checkedTag.toLowerCase();
       });
 
       if (repeats.length > 1) {
@@ -46,9 +53,15 @@
         tagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       }
 
-      if (contentTags.length > 5) {
+
+      if (tags.length > 5) {
         tagsInput.style.border = '2px solid red';
         tagsInput.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+      }
+
+      if (tag.length > 20) {
+        tagsInput.style.border = '2px solid red';
+        tagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов');
       }
 
 
@@ -57,12 +70,11 @@
       }
 
     });
-
   };
 
 
   tagsInput.addEventListener('input', function () {
-    checkFormValidity();
+    checkFormValidity(getTags());
   });
 
 
