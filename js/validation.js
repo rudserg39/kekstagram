@@ -4,9 +4,24 @@
 
 (function () {
 
-  var tagsInput = document.querySelector('.text__hashtags');
+  var border = {
+    GRAY: '3px solid gray',
+    GREEN: '3px solid green',
+    RED: '3px solid red'
+  };
 
+
+  var tagsInput = document.querySelector('.text__hashtags');
+  var photoDescription = document.querySelector('.text__description');
+
+  var text;
+
+
+  tagsInput.style.border = border.GRAY;
   tagsInput.style.outline = 'none';
+
+  photoDescription.style.border = border.GRAY;
+  photoDescription.style.outline = 'none';
 
 
   var getTags = function () {
@@ -20,27 +35,25 @@
 
 
   var checkFormValidity = function (tags) {
+    var isValid = true;
 
     tags.forEach(function (tag) {
-      // startsWith()
-      if (tag.toString().substr(0, 1) !== '#') {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
-      } else {
-        tagsInput.setCustomValidity('');
-        tagsInput.style.border = '2px solid green';
+
+      if (!tag.startsWith('#')) {
+        isValid = false;
+        text = 'Хэш-тег должен начинаться с "#"';
       }
 
 
-      if (tag.toString().substr() === '#') {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Хэш-тег не может состоять только из одной решётки');
+      if (tag === '#') {
+        isValid = false;
+        text = 'Хэш-тег не может состоять только из одной решётки';
       }
 
 
-      if (tagsInput.value.substr(0, 1) === '#' && tag.match(/#/g).length > 1) {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Хэш-теги разделяются пробелами');
+      if (tag.startsWith('#') && tag.match(/#/g).length > 1) {
+        isValid = false;
+        text = 'Хэш-теги разделяются пробелами';
       }
 
 
@@ -49,27 +62,36 @@
       });
 
       if (repeats.length > 1) {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+        isValid = false;
+        text = 'Один и тот же хэш-тег не может быть использован дважды';
       }
 
 
       if (tags.length > 5) {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+        isValid = false;
+        text = 'Нельзя указать больше пяти хэш-тегов';
       }
+
 
       if (tag.length > 20) {
-        tagsInput.style.border = '2px solid red';
-        tagsInput.setCustomValidity('Максимальная длина одного хэш-тега 20 символов');
+        isValid = false;
+        text = 'Максимальная длина одного хэш-тега 20 символов';
       }
 
 
-      if (tagsInput.value === '') {
-        tagsInput.style.border = 'none';
+      if (isValid) {
+        tagsInput.setCustomValidity('');
+        tagsInput.style.border = border.GREEN;
+      } else {
+        tagsInput.setCustomValidity(text);
+        tagsInput.style.border = border.RED;
       }
-
     });
+
+    if (tags.length === 0) {
+      tagsInput.setCustomValidity('');
+      tagsInput.style.border = border.GRAY;
+    }
   };
 
 
@@ -77,7 +99,4 @@
     checkFormValidity(getTags());
   });
 
-
 })();
-
-// После очистки tagsInput.value при ошибке, всё равно выводится сообение о той же ошибке
