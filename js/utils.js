@@ -19,11 +19,7 @@
   // Функция закрытия окна
   var closeWindow = function (eventElement, eventType, openedElement, counter, prewiev) {
     eventElement.addEventListener(eventType, function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        openedElement.classList.add('hidden');
-      }
-
-      if (eventType === 'click') {
+      if (evt.keyCode === ESC_KEYCODE || eventType === 'click') {
         openedElement.classList.add('hidden');
       }
 
@@ -53,3 +49,4 @@
 // 1) Добавить перезакрузку формы при закрытии окна нажатием ESC
 // 2) Удаление загруженной картинки при отправке данных
 // 3) Фото не загружается повторно при закрытии окна через esc
+// 4) Переработать закрытие окон

@@ -60,7 +60,11 @@
 
 
   // Закрытие окна редактирование фото
-  window.utils.closeWindow(closeImgEditFormButton, 'click', imgEditForm, false, true);
-  window.utils.closeWindow(document, 'keydown', imgEditForm, false, true);
+  // window.utils.closeWindow(closeImgEditFormButton, 'click', imgEditForm, false, true);
+  // window.utils.closeWindow(document, 'keydown', imgEditForm, false, true);
+
+  window.upload = {
+    imgEditForm: imgEditForm
+  };
 
 })();
