@@ -10,10 +10,19 @@
     RED: '3px solid red'
   };
 
+  var TAGS_MAX = 5;
+  var TAG_MAX_LENGTH = 20;
+  var DESCRIPTION_MAX_LENGTH = 140;
+
+  var focus = 'focus';
+  var blur = 'blur';
+
 
   var descriptionForm = document.querySelector('.img-upload__text');
   var tagsInput = descriptionForm.querySelector('.text__hashtags');
   var photoDescription = descriptionForm.querySelector('.text__description');
+
+  var closeImgEditFormButton = document.querySelector('.img-upload__cancel');
 
   var borderColor = border.GRAY;
   var text = '';
@@ -26,7 +35,7 @@
     element.style.outline = 'none';
   };
 
-  // Установка Стандартного состояния рамки
+  // Установка стандартного состояния рамки
   setBorderColor(tagsInput, border.GRAY);
   setBorderColor(photoDescription, border.GRAY);
 
@@ -74,12 +83,12 @@
       }
 
 
-      if (tags.length > 5) {
+      if (tags.length > TAGS_MAX) {
         isValid = false;
         text = 'Нельзя указать больше пяти хэш-тегов';
       }
 
-      if (tag.length > 20) {
+      if (tag.length > TAG_MAX_LENGTH) {
         isValid = false;
         text = 'Максимальная длина одного хэш-тега 20 символов';
       }
@@ -105,7 +114,7 @@
   var checkPhotoDescriptionValidity = function () {
     if (photoDescription.value.length === 0) {
       borderColor = border.GRAY;
-    } else if (photoDescription.value.length < 140) {
+    } else if (photoDescription.value.length < DESCRIPTION_MAX_LENGTH) {
       borderColor = border.GREEN;
     } else {
       borderColor = border.RED;
@@ -113,43 +122,57 @@
 
     setBorderColor(photoDescription, borderColor);
 
-    text = photoDescription.value.length < 140 ? '' : 'Длина комментария не может составлять больше 140 символов';
+    text = photoDescription.value.length < DESCRIPTION_MAX_LENGTH ? '' : 'Длина комментария не может составлять больше 140 символов';
 
     photoDescription.setCustomValidity(text);
   };
 
 
-  descriptionForm.addEventListener('input', function (evt) {
+  // Обработчик input (добавление и валидация тегов)
+  var formInputHandler = function (evt) {
     if (evt.target === tagsInput) {
       checkTagsInputValidity(getTags());
     } else {
       checkPhotoDescriptionValidity();
     }
-  });
+  };
+
+  descriptionForm.addEventListener('input', formInputHandler);
 
 
+  // Функции закрытия окна редактирования и загрузки фото
+
+  var closeButtonClickHandler = function () {
+    window.upload.imgEditForm.classList.add('hidden');
+  };
+
+  closeImgEditFormButton.addEventListener('click', closeButtonClickHandler);
+
+
+  // Обработчик нажатия ESC
   var documentKeydonwHandler = function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
       window.upload.imgEditForm.classList.add('hidden');
     }
   };
 
-  var setFormEvent = function (add, element, eventType, handler) {
-    if (add) {
-      element.addEventListener(eventType, handler);
-    } else {
-      element.removeEventListener(eventType, handler);
+
+  // Функция добавления и удаления обработчика нажатия ESC
+  var formFocusHandler = function (element) {
+    if (focus) {
+      element.addEventListener(focus, function () {
+        document.removeEventListener('keydown', documentKeydonwHandler);
+      });
+    }
+
+    if (blur) {
+      element.addEventListener(blur, function () {
+        document.addEventListener('keydown', documentKeydonwHandler);
+      });
     }
   };
 
-  setFormEvent(true, document, 'keydown', documentKeydonwHandler);
-
-  tagsInput.addEventListener('focus', function () {
-    setFormEvent(false, document, 'keydown', documentKeydonwHandler);
-  });
-
-  tagsInput.addEventListener('blur', function () {
-    setFormEvent(true, document, 'keydown', documentKeydonwHandler);
-  });
+  formFocusHandler(tagsInput, focus, blur);
+  formFocusHandler(photoDescription, focus, blur);
 
 })();

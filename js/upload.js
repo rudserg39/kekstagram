@@ -7,8 +7,6 @@
 
 
   var imgEditForm = document.querySelector('.img-upload__overlay');
-  var closeImgEditFormButton = document.querySelector('.img-upload__cancel');
-
 
   var imgFileChooser = document.querySelector('.img-upload__start input[type=file]');
   var imgDropArea = document.querySelector('.img-upload__label');
@@ -58,10 +56,6 @@
   uploadImage('drop', imgDropArea, window.edit.image);
   uploadImage('change', imgFileChooser, window.edit.image);
 
-
-  // Закрытие окна редактирование фото
-  // window.utils.closeWindow(closeImgEditFormButton, 'click', imgEditForm, false, true);
-  // window.utils.closeWindow(document, 'keydown', imgEditForm, false, true);
 
   window.upload = {
     imgEditForm: imgEditForm
