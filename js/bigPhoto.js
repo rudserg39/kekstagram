@@ -20,6 +20,12 @@
   var counter = 5;
 
 
+  // Функция увеличения счётчика комментариев
+  var setCounter = function () {
+    counter += 5;
+  };
+
+
   // Создание элемента комментария
   var createCommentElement = function (comment) {
     var commentElement = photoComment.cloneNode(true);
@@ -43,7 +49,7 @@
   var showCommentsButtonClickHandler = function () {
     var fragment = document.createDocumentFragment();
 
-    commentsArray.slice(0, window.bigPhoto.counter).forEach(function (comment) {
+    commentsArray.slice(0, counter).forEach(function (comment) {
       fragment.appendChild(comment);
       photoCommentsList.appendChild(fragment);
 
@@ -57,7 +63,7 @@
 
 
   showCommentsButton.addEventListener('click', function () {
-    window.bigPhoto.counter += 5;
+    setCounter();
     showCommentsButtonClickHandler();
   });
 
@@ -71,18 +77,27 @@
     showCommentsButton.classList.remove('hidden');
     commentsArray = [];
     photoCommentsList.innerHTML = '';
+    counter = 5;
     addComments(photo);
     showCommentsButtonClickHandler();
   };
 
 
+  // Функция закрытия окна
+  var closeWindow = function (eventElement, eventType, openedElement) {
+    eventElement.addEventListener(eventType, function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE || eventType === 'click') {
+        openedElement.classList.add('hidden');
+      }
+    });
+  };
+
   // Закрытие фото
-  window.utils.closeWindow(closeButton, 'click', photoContainer, true, false);
-  window.utils.closeWindow(document, 'keydown', photoContainer, true, false);
+  closeWindow(closeButton, 'click', photoContainer);
+  closeWindow(document, 'keydown', photoContainer);
 
 
   window.bigPhoto = {
-    counter: counter,
     thumbnailClickHandler: thumbnailClickHandler
   };
 
