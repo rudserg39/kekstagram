@@ -18,6 +18,8 @@
   var blur = 'blur';
 
 
+  var form = document.querySelector('.img-upload__form');
+
   var descriptionForm = document.querySelector('.img-upload__text');
   var tagsInput = descriptionForm.querySelector('.text__hashtags');
   var photoDescription = descriptionForm.querySelector('.text__description');
@@ -142,37 +144,56 @@
 
   // Функции закрытия окна редактирования и загрузки фото
 
-  var closeButtonClickHandler = function () {
-    window.upload.imgEditForm.classList.add('hidden');
+  var setEditWindowInititalState = function () {
+    window.edit.image.style.filter = 'none';
+    window.edit.image.style.transform = 'scale(1)';
+    window.edit.setEffectDepthLineInitialState(true);
+    setBorderColor(tagsInput, border.GRAY);
+    setBorderColor(photoDescription, border.GRAY);
   };
 
-  closeImgEditFormButton.addEventListener('click', closeButtonClickHandler);
+
+  var editorCloseButtonHandler = function () {
+    window.image.editForm.classList.add('hidden');
+    setEditWindowInititalState();
+    form.reset();
+  };
+
+  closeImgEditFormButton.addEventListener('click', editorCloseButtonHandler);
 
 
   // Обработчик нажатия ESC
-  var documentKeydonwHandler = function (evt) {
+  var documentKeydownHandler = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      window.upload.imgEditForm.classList.add('hidden');
+      editorCloseButtonHandler();
     }
   };
+
+  document.addEventListener('keydown', documentKeydownHandler);
 
 
   // Функция добавления и удаления обработчика нажатия ESC
   var formFocusHandler = function (element) {
     if (focus) {
       element.addEventListener(focus, function () {
-        document.removeEventListener('keydown', documentKeydonwHandler);
+        document.removeEventListener('keydown', documentKeydownHandler);
       });
     }
 
     if (blur) {
       element.addEventListener(blur, function () {
-        document.addEventListener('keydown', documentKeydonwHandler);
+        document.addEventListener('keydown', documentKeydownHandler);
       });
     }
   };
 
   formFocusHandler(tagsInput, focus, blur);
   formFocusHandler(photoDescription, focus, blur);
+
+
+  window.validation = {
+    form: form,
+    editorCloseButtonHandler: editorCloseButtonHandler
+  };
 
 })();

@@ -14,6 +14,7 @@
   };
 
   console.log(photoElementsArray);
+
   var onError = function () {
 
   };
@@ -23,6 +24,7 @@
 
 
   window.data = {
+    onSuccess: onSuccess,
     photoElementsArray: photoElementsArray
   };
 

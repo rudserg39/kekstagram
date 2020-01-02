@@ -6,7 +6,7 @@
 
   var serverUrl = {
     LOAD: 'https://js.dump.academy/kekstagram/data',
-    SAVE: 'https://js.dump.academy/kekstagram/'
+    UPLOAD: 'https://js.dump.academy/kekstagram/'
   };
 
 

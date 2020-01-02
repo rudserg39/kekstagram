@@ -2,63 +2,63 @@
 
 (function () {
 
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var EVENTS = ['dragenter', 'dragover', 'dragleave', 'drop'];
+  var main = document.querySelector('main');
+
+  var uploadInput = document.querySelector('#upload-file');
+
+  var successMessage = document.querySelector('#success').content.querySelector('.success');
+
+  var errorMessage = document.querySelector('#error').content.querySelector('.error');
+  var tryAgainButton = errorMessage.querySelector('div > button:first-child');
+  var uploadAnotherFileButton = errorMessage.querySelector('div > button:nth-child(2)');
 
 
-  var imgEditForm = document.querySelector('.img-upload__overlay');
-
-  var imgFileChooser = document.querySelector('.img-upload__start input[type=file]');
-  var imgDropArea = document.querySelector('.img-upload__label');
-
-
-  // Функция удаления действия по умолчанию при перетаскивании файла
-  var preventEvents = function (element, eventType) {
-    element.addEventListener(eventType, function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-    });
+  var showMessage = function (show, message) {
+    return show === true ? main.appendChild(message) : message.remove();
   };
 
-  EVENTS.forEach(function (eventType) {
-    preventEvents(imgDropArea, eventType);
-  });
 
+  var addMessageEvent = function (eventElement, eventType, message) {
+    eventElement.addEventListener(eventType, function (evt) {
+      if (eventType === 'keydown' && evt.keyCode === window.utils.ESC_KEYCODE) {
+        showMessage(false, message);
+      }
 
-  // Функция для отображения превью картинки при перетаскивании и загрузки в форму
-  var uploadImage = function (eventType, fileChooser, preview) {
-    fileChooser.addEventListener(eventType, function (evt) {
+      if (eventType === 'click' && evt.target === message.querySelector('button') || evt.target === message) {
+        showMessage(false, message);
+      }
 
-      var file = eventType === 'drop' ? evt.dataTransfer.files[0] : evt.target.files[0];
-
-      var fileName = file.name.toLowerCase();
-
-      var matches = FILE_TYPES.some(function (it) {
-        return fileName.endsWith(it);
-      });
-
-      if (matches) {
-        var reader = new FileReader();
-
-        var inputLoadHandler = function () {
-          preview.src = reader.result;
-          imgEditForm.classList.remove('hidden');
-          window.edit.setEffectDepthLineInitialState(true);
-        };
-
-        reader.addEventListener('load', inputLoadHandler);
-
-        reader.readAsDataURL(file);
+      if (evt.target === uploadAnotherFileButton) {
+        showMessage(false, message);
+        uploadInput.click();
       }
     });
+
   };
 
-  uploadImage('drop', imgDropArea, window.edit.image);
-  uploadImage('change', imgFileChooser, window.edit.image);
+  addMessageEvent(document, 'keydown', successMessage);
+  addMessageEvent(successMessage, 'click', successMessage);
+
+  addMessageEvent(document, 'keydown', errorMessage);
+  addMessageEvent(errorMessage, 'click', errorMessage);
 
 
-  window.upload = {
-    imgEditForm: imgEditForm
+  var onSuccess = function () {
+    window.validation.editorCloseButtonHandler();
+    showMessage(true, successMessage);
   };
+
+
+  var onError = function () {
+    window.validation.editorCloseButtonHandler();
+    showMessage(true, errorMessage);
+  };
+
+
+  window.validation.form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.saveData(new FormData(window.validation.form), onSuccess, onError);
+  });
+
 
 })();
