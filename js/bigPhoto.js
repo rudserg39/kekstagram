@@ -4,6 +4,8 @@
 
 (function () {
 
+  var body = document.querySelector('body');
+
   var photoContainer = document.querySelector('.big-picture');
   var photoImg = photoContainer.querySelector('.big-picture__img').querySelector('img');
   var photoDescription = photoContainer.querySelector('.social__caption');
@@ -31,6 +33,7 @@
     var commentElement = photoComment.cloneNode(true);
 
     commentElement.querySelector('img').src = comment.avatar;
+    commentElement.querySelector('img').alt = comment.name;
     commentElement.querySelector('p').textContent = comment.message;
 
     return commentElement;
@@ -75,6 +78,7 @@
     photoLikes.textContent = photo.likes;
     photoContainer.classList.remove('hidden');
     showCommentsButton.classList.remove('hidden');
+    body.classList.add('modal-open');
     commentsArray = [];
     photoCommentsList.innerHTML = '';
     counter = 5;
@@ -88,6 +92,7 @@
     eventElement.addEventListener(eventType, function (evt) {
       if (evt.keyCode === window.utils.ESC_KEYCODE || eventType === 'click') {
         openedElement.classList.add('hidden');
+        body.classList.remove('modal-open');
       }
     });
   };
