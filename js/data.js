@@ -4,19 +4,22 @@
 
 (function () {
 
-  var photoElementsArray = [];
+  var message = document.querySelector('#messages').content.querySelector('div');
+
+  var imgFilters = document.querySelector('.img-filters');
+
+  var photosArray = [];
 
 
   var onSuccess = function (data) {
-    window.data.photoElementsArray = data;
-    window.thumbnails.renderPhotos(data);
-    console.log(data);
+    imgFilters.classList.remove('img-filters--inactive');
+    window.data.photosArray = data;
   };
 
-  console.log(photoElementsArray);
-
-  var onError = function () {
-
+  var onError = function (errorMessage) {
+    message.classList.remove('img-upload__message--loading');
+    document.querySelector('main').appendChild(message);
+    message.textContent = errorMessage;
   };
 
 
@@ -24,8 +27,8 @@
 
 
   window.data = {
-    onSuccess: onSuccess,
-    photoElementsArray: photoElementsArray
+    imgFilters: imgFilters,
+    photosArray: photosArray
   };
 
 })();
