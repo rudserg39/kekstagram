@@ -6,9 +6,12 @@
 
   var uploadInput = document.querySelector('#upload-file');
 
+  var uploadSubmitButton = document.querySelector('.img-upload__submit');
+
   var successMessage = document.querySelector('#success').content.querySelector('.success');
 
   var errorMessage = document.querySelector('#error').content.querySelector('.error');
+  var errorTitle = errorMessage.querySelector('h2');
   var tryAgainButton = errorMessage.querySelector('div > button:first-child');
   var uploadAnotherFileButton = errorMessage.querySelector('div > button:nth-child(2)');
 
@@ -29,8 +32,14 @@
       }
 
       if (evt.target === uploadAnotherFileButton) {
+        window.validation.editorCloseButtonHandler();
         showMessage(false, message);
         uploadInput.click();
+      }
+
+      if (evt.target === tryAgainButton) {
+        showMessage(false, message);
+        uploadSubmitButton.click();
       }
     });
 
@@ -48,9 +57,9 @@
     showMessage(true, successMessage);
   };
 
-
-  var onError = function () {
-    window.validation.editorCloseButtonHandler();
+  var onError = function (message) {
+    errorTitle.textContent = message;
+    window.image.editForm.classList.add('hidden');
     showMessage(true, errorMessage);
   };
 
