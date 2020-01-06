@@ -40,30 +40,33 @@
   var getRandomPhotos = function (array) {
     var j;
     var temp;
+    var newArray = array.slice(0);
 
-    for (var i = array.length - 1; i > 0; i--) {
+
+    for (var i = newArray.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
-      temp = array[j];
-      array[j] = array[i];
-      array[i] = temp;
+      temp = newArray[j];
+      newArray[j] = newArray[i];
+      newArray[i] = temp;
     }
 
-    return array.slice(0, RANDOM_PHOTOS_NUMBER);
+    return newArray.slice(0, RANDOM_PHOTOS_NUMBER);
   };
 
 
   // Функция сортировки фото в порядке убывания количества комментариев
   var getMostCommentedPhotos = function (array) {
-    var mostCommentedPhotos = array.sort(function (a, b) {
+    var newArray = array.slice(0);
+
+    var mostCommentedPhotos = newArray.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
     return mostCommentedPhotos;
   };
 
 
-  filterForm.addEventListener('click', function (evt) {
-    removePreviousPhotos();
-
+  // Обработчик клика по фильтру
+  var filterClickHandler = window.utils.setInterval(function (evt) {
     if (evt.target === filterPopular) {
       filteredPhotos = window.data.photosArray;
     }
@@ -77,10 +80,12 @@
     }
 
     window.thumbnails.renderPhotos(filteredPhotos);
+  });
 
 
-    console.log(window.data.photosArray);
-    console.log(filteredPhotos);
+  filterForm.addEventListener('click', function (evt) {
+    removePreviousPhotos();
+    filterClickHandler(evt);
   });
 
 
