@@ -65,7 +65,7 @@
     removePreviousPhotos();
 
     if (evt.target === filterPopular) {
-      
+      filteredPhotos = window.data.photosArray;
     }
 
     if (evt.target === filterRandom) {
@@ -78,8 +78,9 @@
 
     window.thumbnails.renderPhotos(filteredPhotos);
 
-    console.log(filteredPhotos);
 
+    console.log(window.data.photosArray);
+    console.log(filteredPhotos);
   });
 
 
