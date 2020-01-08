@@ -12,8 +12,6 @@
   var filterRandom = filterForm.querySelector('#filter-random');
   var filterDiscussed = filterForm.querySelector('#filter-discussed');
 
-  var filteredPhotos = [];
-
 
   // Функция выделения кнопок фильтров
   var addFilterButtonClass = function (filter) {
@@ -42,7 +40,6 @@
     var temp;
     var newArray = array.slice(0);
 
-
     for (var i = newArray.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
       temp = newArray[j];
@@ -65,32 +62,40 @@
   };
 
 
+  // Функция отображения отфильтрованных фото
+  var showFilteredPhotos = function (filteredArray) {
+    window.thumbnails.renderPhotos(filteredArray);
+  };
+
+
   // Обработчик клика по фильтру
   var filterClickHandler = window.utils.setInterval(function (evt) {
+    removePreviousPhotos();
+
     if (evt.target === filterPopular) {
-      filteredPhotos = window.data.photosArray;
+      showFilteredPhotos(window.data.popularPhotos);
     }
 
     if (evt.target === filterRandom) {
-      filteredPhotos = getRandomPhotos(window.data.photosArray);
+      showFilteredPhotos(window.data.randomPhotos);
     }
 
     if (evt.target === filterDiscussed) {
-      filteredPhotos = getMostCommentedPhotos(window.data.photosArray);
+      showFilteredPhotos(window.data.mostCommentedPhotos);
     }
-
-    window.thumbnails.renderPhotos(filteredPhotos);
   });
 
 
   filterForm.addEventListener('click', function (evt) {
-    removePreviousPhotos();
     filterClickHandler(evt);
   });
 
 
   window.filter = {
-    filterPopular: filterPopular
+    filterPopular: filterPopular,
+    getRandomPhotos: getRandomPhotos,
+    getMostCommentedPhotos: getMostCommentedPhotos,
+    showFilteredPhotos: showFilteredPhotos
   };
 
 })();

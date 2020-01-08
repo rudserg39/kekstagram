@@ -8,13 +8,22 @@
 
   var imgFilters = document.querySelector('.img-filters');
 
-  var photosArray = [];
+  var popularPhotos;
+  var randomPhotos;
+  var mostCommentedPhotos;
 
 
   var onSuccess = function (data) {
     imgFilters.classList.remove('img-filters--inactive');
-    window.data.photosArray = data;
+    window.filter.showFilteredPhotos(data);
+
+    window.data.popularPhotos = data;
+
+    window.data.randomPhotos = window.filter.getRandomPhotos(data);
+
+    window.data.mostCommentedPhotos = window.filter.getMostCommentedPhotos(data);
   };
+
 
   var onError = function (errorMessage) {
     message.classList.remove('img-upload__message--loading');
@@ -28,7 +37,9 @@
 
   window.data = {
     imgFilters: imgFilters,
-    photosArray: photosArray
+    popularPhotos: popularPhotos,
+    randomPhotos: randomPhotos,
+    mostCommentedPhotos: mostCommentedPhotos
   };
 
 })();
