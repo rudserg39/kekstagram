@@ -5,8 +5,8 @@
 (function () {
 
   var serverUrl = {
-    LOAD: 'https://js.dump.academy/kekstagram/data',
-    UPLOAD: 'https://js.dump.academy/kekstagram/'
+    LOAD: 'https://21.javascript.pages.academy/kekstagram/data',
+    UPLOAD: 'https://21.javascript.pages.academy/kekstagram/'
   };
 
 
